@@ -9,6 +9,8 @@ const sls = require("serverless-http");
 const asyncHandler = require("express-async-handler");
 const createError = require("http-errors");
 
+const { initRoutes } = require('./router');
+
 const app = express();
 
 // Middleware
@@ -18,15 +20,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // DB connect
 mongoose.connect(process.env.MONGODB_CONNECT_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 const { connection } = mongoose;
-connection.once("open", function () {
-  console.log(`we're connected!`);
-});
+connection.once("open", onDbConnect);
 connection.on('error', console.error.bind(console, 'Mongoose connection error:'));
 
-// Schemas
+function onDbConnect() {
+  initRoutes(app);
 
-// Models
+  app.listen(3000);
+}
 
-// Routes
-
-// Errors
+// serverless activation
