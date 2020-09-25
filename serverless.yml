@@ -7,6 +7,18 @@ provider:
   runtime: nodejs12.x
   region: eu-central-1
 
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:    
+    port: 3001
+
 functions:
   client-sms:
-    handler: handler.sendsms
+    handler: server.run
+    events:
+      - http:
+          path: /
+          method: ANY
+          cors: true

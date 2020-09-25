@@ -2,9 +2,11 @@
   "name": "sms-lambda",
   "version": "1.0.0",
   "description": "",
-  "main": "handler.js",
+  "main": "sls.js",
   "scripts": {
-    "start": "node app/index.js"
+    "start": "NODE_ENV=production node app/index.js",
+    "dev": "NODE_ENV=development nodemon app/index.js",
+    "offline": "NODE_ENV=sls sls offline start --skipCacheInvalidation"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +22,7 @@
     "serverless-http": "^2.6.0"
   },
   "devDependencies": {
+    "nodemon": "^2.0.4",
     "serverless-offline": "^6.8.0"
   }
 }

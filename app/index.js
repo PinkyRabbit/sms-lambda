@@ -3,11 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-
-const AWS = require("aws-sdk");
 const sls = require("serverless-http");
-const asyncHandler = require("express-async-handler");
-const createError = require("http-errors");
 
 const { initRoutes } = require('./router');
 
@@ -26,7 +22,10 @@ connection.on('error', console.error.bind(console, 'Mongoose connection error:')
 function onDbConnect() {
   initRoutes(app);
 
-  app.listen(3000);
+  if (process.env.NODE_ENV !== "sls") {
+    app.listen(3000, () => console.log(">> Server is live!"));
+  }
 }
 
 // serverless activation
+module.exports = { app };
