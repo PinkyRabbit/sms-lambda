@@ -1,6 +1,8 @@
 const { Router } = require('express');
 const expressAsyncHandler = require('express-async-handler');
 
+const { CustomerModel } = require('../db');
+
 const router = Router();
 
 router
@@ -12,7 +14,8 @@ router
   .post("/send/:id", expressAsyncHandler(sendSMS));
 
 async function createADocument(req, res, next) {
-
+  const customer = await CustomerModel.create(req.body);
+  res.status(200).json(customer);
 }
 
 async function getCustomers(req, res, next) {
