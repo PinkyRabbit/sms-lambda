@@ -6,7 +6,8 @@
   "scripts": {
     "start": "NODE_ENV=production node app/index.js",
     "dev": "NODE_ENV=development nodemon app/index.js",
-    "offline": "NODE_ENV=sls sls offline start --skipCacheInvalidation"
+    "offline": "NODE_ENV=sls sls offline start --skipCacheInvalidation",
+    "deploy": "NODE_ENV=sls sls deploy"
   },
   "keywords": [],
   "author": "",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.4",
+    "serverless-dotenv-plugin": "^3.0.0",
     "serverless-offline": "^6.8.0"
   }
 }

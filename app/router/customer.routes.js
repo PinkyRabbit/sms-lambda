@@ -7,26 +7,52 @@ const router = Router();
 
 router
   .get("/", expressAsyncHandler(getCustomers))
-  .post("/", expressAsyncHandler(createADocument))
+  .post("/", expressAsyncHandler(createCustomers))
   .get("/:id", expressAsyncHandler(getCustomerById))
   .put("/:id", expressAsyncHandler(updateCustomer))
   .delete("/:id", expressAsyncHandler(deleteCustomer))
   .post("/send/:id", expressAsyncHandler(sendSMS));
 
-async function createADocument(req, res, next) {
-  const customer = await CustomerModel.create(req.body);
+async function createCustomers(req, res, next) {
+  const customer = await CustomerModel.create({
+    ...req.body,
+    messages: [],
+  });
+
   res.status(200).json(customer);
 }
 
 async function getCustomers(req, res, next) {
-
+  const customers = await CustomerModel.find({});
+  res.status(200).json(customers);
 }
 
-async function getCustomerById(req, res, next) {}
+async function getCustomerById(req, res, next) {
+  const { id } = req.params;
 
-async function updateCustomer(req, res, next) {}
+  const customer = await CustomerModel.findById(id);
+  if (!customer) {
+    throw createError(404, `A customer with the id ${id} does not exist`);
+  }
 
-async function deleteCustomer(req, res, next) {}
+  res.status(200).json(customer);
+}
+
+async function updateCustomer(req, res, next) {
+  const { id } = req.params;
+  const customer = await CustomerModel.update(
+    { _id: id },
+    { $set: req.body },
+    { new: true },
+  );
+  res.status(200).json(customer);
+}
+
+async function deleteCustomer(req, res, next) {
+  const { id } = req.params;
+  await CustomerModel.remove({ _id: id });
+  res.status(200).json({ success: true });
+}
 
 async function sendSMS(req, res, next) {}
 
