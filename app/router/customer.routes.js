@@ -1,7 +1,11 @@
 const { Router } = require('express');
 const expressAsyncHandler = require('express-async-handler');
 
-const { CustomerModel } = require('../db');
+const {
+  CustomerModel,
+  MessageModel,
+} = require('../db');
+const { sendSmsAWS } = require('../services/sns');
 
 const router = Router();
 
@@ -54,7 +58,27 @@ async function deleteCustomer(req, res, next) {
   res.status(200).json({ success: true });
 }
 
-async function sendSMS(req, res, next) {}
+async function sendSMS(req, res, next) {
+  const { id } = req.params;
+  const { message } = req.body;
+
+  const customer = await CustomerModel.findById(id);
+  if (!customer) {
+    throw createError(404, `A customer with the id ${id} does not exist`);
+  }
+
+  const payload = {
+    Message: message,
+    PhoneNumber: customer.phoneNumber,
+  };
+  await sendSmsAWS(payload);
+  await MessageModel.create({
+    ...payload,
+    createdAt: new Date().toISOString(),
+  });
+
+  res.status(200).json({ success: true });
+}
 
 module.exports = {
   customersRoutes: router,

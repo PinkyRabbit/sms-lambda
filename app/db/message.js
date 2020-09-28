@@ -1,10 +1,13 @@
 const { Schema, model } = require("mongoose");
 
+const requiredString = {
+  type: String,
+  required: true,
+};
 const MessageScheema = new Schema({
-  message: {
-    type: String,
-    required: true,
-  },
+  Message: requiredString,
+  PhoneNumber: requiredString,
+  createdAt: requiredString,
 });
 
 const MessageModel = model("message", MessageScheema);
