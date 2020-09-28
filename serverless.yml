@@ -9,16 +9,17 @@ provider:
 
 plugins:
   - serverless-offline
-
-custom:
-  serverless-offline:    
-    port: 3001
+  - serverless-dotenv-plugin
 
 functions:
   client-sms:
-    handler: server.run
+    handler: sls.run
     events:
       - http:
           path: /
+          method: ANY
+          cors: true
+      - http:
+          path: /{proxy+}
           method: ANY
           cors: true
